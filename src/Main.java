@@ -32,7 +32,7 @@ public class Main {
         System.out.println();
 
 
-        books.add(new Book(1,"Learn C++","Taing Sengkim",releaseDate,new HashSet<>(List.of(categories.get(0), categories.get(1)))));
+        books.add(new Book(1,"Learn C++","Mrr KokoMa",releaseDate,new HashSet<>(List.of(categories.get(0), categories.get(1)))));
         System.out.println("Books  : "+books);
         System.out.println();
         System.out.println();
@@ -49,7 +49,7 @@ public class Main {
 
         librarians.add(new Librarian(1,"MORNING",new Date(),1,"staff-kaka","kaka123!@#","098881323","ouressey"));
 
-        members.add(new Member(1,"kim","kim!@#123","0966931313","toul kork",new Date(),10));
+        members.add(new Member(1,"kiki","kiki!@#123","0966931313","toul kork",new Date(),10));
 
     }
 
