@@ -11,7 +11,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"member", "transactions"})
+@ToString(exclude = {"member"})
 
 public class History {
     private int historyId;

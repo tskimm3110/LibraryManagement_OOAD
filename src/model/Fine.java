@@ -14,4 +14,6 @@ public class Fine {
     private String reason;
     private Date issueDate;
     private Payment payment;
+    private Return returnTransaction;
+
 }

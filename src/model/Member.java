@@ -10,7 +10,7 @@ import java.util.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
+@ToString(callSuper = true)
 public class Member extends User{
     private List<History> histories = new ArrayList<>();
     private Date joinedDate;

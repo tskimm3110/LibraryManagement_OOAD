@@ -1,4 +1,12 @@
 import model.*;
+import service.BorrowService;
+import service.FineService;
+import service.PaymentService;
+import service.ReturnService;
+import service.implementation.BorrowServiceImpl;
+import service.implementation.FineServiceImpl;
+import service.implementation.PaymentServiceImpl;
+import service.implementation.ReturnServiceImpl;
 
 import java.util.*;
 public class Main {
@@ -50,7 +58,40 @@ public class Main {
         librarians.add(new Librarian(1,"MORNING",new Date(),1,"staff-kaka","kaka123!@#","098881323","ouressey"));
 
         members.add(new Member(1,"kiki","kiki!@#123","0966931313","toul kork",new Date(),10));
+        members.add(new Member(2,"kiki2","kiki!@#1234","09669313443","toul kork2",new Date(),10));
 
+
+        List<BookCopy> bookForBorrow = new ArrayList<>();
+
+        bookForBorrow.add(bookCopies.get(0));
+        bookForBorrow.add(bookCopies.get(1));
+
+        BorrowService borrowService = new BorrowServiceImpl();
+
+       Borrow borrow1 = borrowService.borrowBook(members.get(0),librarians.get(0),bookForBorrow);
+
+        Borrow borrow2 = borrowService.borrowBook(members.get(0),librarians.get(0),bookForBorrow);
+
+        Borrow borrow3 = borrowService.borrowBook(members.get(0),librarians.get(0),List.of(bookCopies.get(2)));
+
+        Borrow borrow4 = borrowService.borrowBook(members.get(1),librarians.get(0),List.of(bookCopies.get(3)));
+
+
+        printTransaction(borrow1);
+        printTransaction(borrow2);
+        printTransaction(borrow3);
+        printTransaction(borrow4);
+
+        ReturnService returnService = new ReturnServiceImpl();
+        FineService fineService = new FineServiceImpl();
+        PaymentService paymentService = new PaymentServiceImpl();
+
+        Return return1 = returnService.returnBook(members.get(0),borrow1.getBooks());
+
+
+
+        checkBookStatus(bookCopies);
+        System.out.println(members);
     }
 
 
@@ -61,6 +102,8 @@ public class Main {
     }
 
     public static void checkBookStatus(List<BookCopy> bookCopies){
+        System.out.println();
+        System.out.println();
         System.out.println("BookCopy statuses after borrow:");
         for (BookCopy copy : bookCopies) {
             System.out.println("Book Title : " + copy.getBook().getTitle() +" | Copy " + copy.getCopyId() + " borrowed ? " + copy.isBorrow());
@@ -70,14 +113,18 @@ public class Main {
     }
 
     public static void printTransaction(Transaction t) {
-        System.out.println("====->> Transaction ID: " + t.getTransactionId());
-        System.out.println(" \t->> Handled By: " + t.getHandleBy().getUserName());
-        System.out.println(" \t->> Borrowed By: " + t.getMember().getUserName());
-        System.out.println(" \t->> Created At: " + t.getCreatedAt());
-        System.out.println(" \t->> Books:");
-        for (BookCopy bc : t.getBooks()) {
-            System.out.println("\t - " + bc.getBook().getTitle() + " (Copy ID: " + bc.getCopyId() + ", Borrowed: " + bc.isBorrow() + ")");
-        }
+       if(t != null){
+           System.out.println("====->> Transaction ID: " + t.getTransactionId());
+           System.out.println(" \t->> Handled By: " + t.getHandleBy().getUserName());
+           System.out.println(" \t->> Borrowed By: " + t.getMember().getUserName());
+           System.out.println(" \t->> Created At: " + t.getCreatedAt());
+           System.out.println(" \t->> Books:");
+           for (BookCopy bc : t.getBooks()) {
+               System.out.println("\t - " + bc.getBook().getTitle() + " (Copy ID: " + bc.getCopyId() + ", Borrowed: " + bc.isBorrow() + ")");
+           }
+       }else {
+           System.out.println("Borrow Cancel!");
+       }
     }
 
     public static void printHistory( List<Member> members){
