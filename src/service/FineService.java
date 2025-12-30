@@ -6,6 +6,6 @@ import model.Return;
 
 public interface FineService {
     public void createFine(Return returnTransaction);
-    public double calculateFine(Payment returnTransaction);
+    public double calculateFine(Return returnTransaction);
     public void payFine(Fine fine, Payment payment);
 }

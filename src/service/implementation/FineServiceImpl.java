@@ -13,7 +13,7 @@ public class FineServiceImpl implements FineService {
     }
 
     @Override
-    public double calculateFine(Payment returnTransaction) {
+    public double calculateFine(Return returnTransaction) {
         return 0;
     }
 

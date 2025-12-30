@@ -4,14 +4,12 @@ import lombok.Data;
 import model.*;
 import service.ReturnService;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @Data
 public class ReturnServiceImpl implements ReturnService {
     @Override
-    public Return returnBook(Member member, List<BookCopy> books) {
+    public Return returnBook(Member member, List<BookCopy> books,Librarian handleBy) {
         for (BookCopy bc : books) {
             if (!bc.isBorrow()) {
                 System.out.println(
@@ -36,24 +34,29 @@ public class ReturnServiceImpl implements ReturnService {
                 }
             }
         }
+
         Return returnTransaction = new Return();
-        returnTransaction.setReturnId(member.getHistories().size() + 1);
+        returnTransaction.setTransactionId(member.getHistories().size() + 1);
         returnTransaction.setBooks(books);
         returnTransaction.setMember(member);
         returnTransaction.setReturnDate(returnDate);
         returnTransaction.setDueDate(dueDate);
+        returnTransaction.setHandleBy(handleBy);
+        returnTransaction.setCreatedAt(new Date());
 
         History history = new History();
         history.setHistoryId(member.getHistories().size() + 1);
         history.setMember(member);
         history.setDate(new Date());
-        history.setTransactions(new HashSet<>());
+        history.setTransactions(new ArrayList<>());
         history.getTransactions().add(returnTransaction);
+
 
         member.getHistories().add(history);
 
         System.out.println("Return transaction created and added to history!");
 
+        System.out.println(returnTransaction);
         return returnTransaction;
     }
 

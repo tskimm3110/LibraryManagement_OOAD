@@ -1,20 +1,11 @@
 import model.*;
-import service.BorrowService;
-import service.FineService;
-import service.PaymentService;
-import service.ReturnService;
-import service.implementation.BorrowServiceImpl;
-import service.implementation.FineServiceImpl;
-import service.implementation.PaymentServiceImpl;
-import service.implementation.ReturnServiceImpl;
+import service.*;
+import service.implementation.*;
 
 import java.util.*;
 public class Main {
     public static void main(String[] args) {
-        Calendar calBorrow = Calendar.getInstance();
-        Date borrowDate = calBorrow.getTime();
-        calBorrow.add(Calendar.DAY_OF_MONTH, 7); // due in 7 days
-        Date dueDate = calBorrow.getTime();
+
 
         Calendar cal = Calendar.getInstance();
         cal.set(2025, Calendar.DECEMBER, 30);
@@ -86,19 +77,34 @@ public class Main {
         FineService fineService = new FineServiceImpl();
         PaymentService paymentService = new PaymentServiceImpl();
 
-        Return return1 = returnService.returnBook(members.get(0),borrow1.getBooks());
+        Return return1 = returnService.returnBook(members.get(0),borrow1.getBooks(),librarians.get(0));
+        Return return2 = returnService.returnBook(members.get(0),borrow1.getBooks(),librarians.get(0));
 
+
+
+
+
+        printHistory(members);
 
 
         checkBookStatus(bookCopies);
         System.out.println(members);
-    }
+
+        ReservationService reservationService = new ReservationServiceImpl();
+        Reservation res = reservationService.reserveBook(members.get(0), bookCopies.get(0),librarians.get(0));
+        System.out.println("Reservation status: " + res.getStatus());
+        reservationService.fulfillReserve(res);
+        System.out.println("Reservation status: " + res.getStatus());
+        System.out.println(members);
 
 
-    public static void setBorrowStatus(Transaction transaction, boolean isBorrowed) {
-        for(BookCopy bc : transaction.getBooks()) {
-            bc.setBorrow(isBorrowed);
-        }
+        Reservation res2 = reservationService.reserveBook(members.get(1), bookCopies.get(0),librarians.get(0));
+        System.out.println("\n\nReservation status : " + res2.getStatus());
+        reservationService.cancelReserve(res2);
+        System.out.println("Reservation status : " + res2.getStatus());
+
+        printHistory(members);
+
     }
 
     public static void checkBookStatus(List<BookCopy> bookCopies){
@@ -115,12 +121,18 @@ public class Main {
     public static void printTransaction(Transaction t) {
        if(t != null){
            System.out.println("====->> Transaction ID: " + t.getTransactionId());
-           System.out.println(" \t->> Handled By: " + t.getHandleBy().getUserName());
+           System.out.println(" \t->> Handled By: " + t.getHandleBy());
            System.out.println(" \t->> Borrowed By: " + t.getMember().getUserName());
            System.out.println(" \t->> Created At: " + t.getCreatedAt());
            System.out.println(" \t->> Books:");
            for (BookCopy bc : t.getBooks()) {
-               System.out.println("\t - " + bc.getBook().getTitle() + " (Copy ID: " + bc.getCopyId() + ", Borrowed: " + bc.isBorrow() + ")");
+               System.out.print("\t - " + bc.getBook().getTitle() + " (Copy ID: " + bc.getCopyId());
+               if(!bc.isBorrow()){
+                   System.out.println(", Type :  Return )");
+               }else {
+                   System.out.println(", Type :  Borrow )");
+
+               }
            }
        }else {
            System.out.println("Borrow Cancel!");
@@ -129,7 +141,12 @@ public class Main {
 
     public static void printHistory( List<Member> members){
         for (Member m : members) {
-//            System.out.println("Member: " + m.getUserName());
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println("Member: " + m.getUserName());
             for (History h : m.getHistories()) {
                 System.out.println("  History ID: " + h.getHistoryId() + ", Date: " + h.getDate());
 //                System.out.println("Transactions : "+h.getTransactions().toArray().length);
@@ -139,11 +156,21 @@ public class Main {
 //                    for (BookCopy bc : t.getBooks()) {
 //                        System.out.println("      - " + bc.getBook().getTitle() + " (Copy ID: " + bc.getCopyId() + ", Borrowed: " + bc.isBorrow() + ")");
 //                    }
+                    if (t instanceof Return) {
+                        System.out.println("    Return Date: " + ((Return) t).getReturnDate());
+                        System.out.println();
+                        System.out.println();
+                    }
+                    if (t instanceof Reservation) {
+                        System.out.println("    Reservation Date: " + ((Reservation) t).getReservationDate());
+                        System.out.println("    Reservation Status: " + ((Reservation) t).getStatus());
+                        System.out.println();
+                        System.out.println();
+                    }
                     if (t instanceof Borrow) {
                         System.out.println("    Due Date: " + ((Borrow) t).getDueDate());
                         System.out.println();
                         System.out.println();
-
                     }
                 }
             }

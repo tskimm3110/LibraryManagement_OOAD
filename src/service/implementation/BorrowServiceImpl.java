@@ -4,10 +4,8 @@ import lombok.Data;
 import model.*;
 import service.BorrowService;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @Data
 public class BorrowServiceImpl implements BorrowService {
     @Override
@@ -48,7 +46,7 @@ public class BorrowServiceImpl implements BorrowService {
         history.setHistoryId(member.getHistories().size() + 1);
         history.setMember(member);
         history.setDate(new Date());
-        history.setTransactions(new HashSet<>());
+        history.setTransactions(new ArrayList<>());
         history.getTransactions().add(borrow);
         member.getHistories().add(history);
 
